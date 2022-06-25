@@ -4,8 +4,8 @@
   "license": "UNLICENSED",
   "scripts": {
     "debug": "node --inspect-brk index.js",
-    "dev": "cross-env NODE_ENV=development nodemon index.js --ignore ./frontend",
-    "serve": "cross-env NODE_ENV=production node index.js",
+    "dev": "tsc && cross-env NODE_ENV=development nodemon index.js --ignore ./frontend",
+    "serve": "tsc && cross-env NODE_ENV=production node index.js",
     "test": "vitest --reporter=verbose"
   },
   "type": "module",
@@ -17,6 +17,7 @@
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cross-env": "^7.0.3",
+    "exceljs": "^4.3.0",
     "express": "^4.17.3",
     "serve-static": "^1.14.1"
   },
