@@ -1,35 +1,11 @@
-import {resolve, dirname} from "path"
+import {resolve} from "path"
 import {Cell, Row} from 'exceljs';
+import {ProductInfo, initProductInfo, Products} from "./info.js";
 import exceljs from 'exceljs';
 const {Workbook} = exceljs;
 const __dirname = resolve()
 
-export type Products = { [key: string]: ProductInfo }
 
-export interface ProductInfo {
-    handle: string;
-    title: string;
-    body_html: string;
-    images: string[] | null;
-    prices: number[] | null;
-    option_names: string[] | null;
-    option_values: string[] | null;
-    // 每行商品的有多少个option， 这样便于区分option_names，option_values 在每行有多少个， 从而避免解析错误
-    option_cnt: number[];
-}
-
-function initProductInfo(): ProductInfo {
-    return {
-        title: "",
-        handle: "",
-        body_html: "",
-        images: null,
-        prices: null,
-        option_names: null,
-        option_values: null,
-        option_cnt: [],
-    };
-}
 
 function handleProductCell(prod: ProductInfo, prop: string, value: any) {
     // @ts-ignore

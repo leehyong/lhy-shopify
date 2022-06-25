@@ -6,7 +6,15 @@
     "debug": "node --inspect-brk index.js",
     "dev": "tsc && cross-env NODE_ENV=development nodemon index.js --ignore ./frontend",
     "serve": "tsc && cross-env NODE_ENV=production node index.js",
-    "test": "vitest --reporter=verbose"
+    "test": "vitest --reporter=verbose",
+    "product_test": "tsc && cross-env TS_NODE_PROJECT='product/__tests__/tsconfig.test.json' mocha product/__tests__/**.js"
+  },
+  "mocha": {
+    "require": [
+      "ts-node/register",
+      "tsconfig-paths/register"
+    ],
+    "ui": "bdd"
   },
   "type": "module",
   "engines": {

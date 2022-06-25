@@ -9,7 +9,8 @@ import applyAuthMiddleware from "./middleware/auth.js";
 import verifyRequest from "./middleware/verify-request.js";
 import {setupGDPRWebHooks} from "./gdpr.js";
 import {BillingInterval} from "./helpers/ensure-billing.js";
-import {ParseProductInfo} from "./helpers/excel.js"
+import {ParseProductInfo} from "./product/excel.js"
+import {OpImportProduct} from "./product/op.js"
 
 const USE_ONLINE_TOKENS = true;
 const TOP_LEVEL_OAUTH_COOKIE = "shopify_top_level_oauth";
@@ -106,8 +107,8 @@ export async function createServer(
             billing: billingSettings,
         })
     );
-    // https://dbaa-111-121-95-4.ap.ngrok.io/api/products-count?shop=lee666tech2.myshopify.com
-    // https://dbaa-111-121-95-4.ap.ngrok.io/api/import/product?shop=lee666tech2.myshopify.com
+    // https://e475-111-121-95-4.jp.ngrok.io/api/products-count?shop=lee666tech2.myshopify.com
+    // https://e475-111-121-95-4.jp.ngrok.io/api/import/product?shop=lee666tech2.myshopify.com
     app.get("/api/products-count", async (req, res) => {
         const session = await Shopify.Utils.loadCurrentSession(req, res, true);
         const {Product} = await import(
@@ -131,8 +132,13 @@ export async function createServer(
         try {
             console.log("ParseProductInfo1")
             const pi = new ParseProductInfo(filePath)
-            pi.parse().then(result => {
-                res.status(200).send(result);
+            const session = await Shopify.Utils.loadCurrentSession(req, res, true);
+            pi.parse().then(async (allProducts) => {
+                const op = new OpImportProduct(session, allProducts);
+                const cnt = await op.saveProducts();
+                console.log(cnt);
+                const msg = `保存的商品个数${cnt}`;
+                res.status(200).send({msg});
             }).catch(err => {
                 console.error(err)
                 res.status(500).send(err);

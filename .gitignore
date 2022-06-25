@@ -22,6 +22,8 @@ dist/
 
 # extensions build output
 extensions/*/build
+web/product/**/*.js
+web/product/*.js.map
 
 # Node library SQLite database
 web/database.sqlite
