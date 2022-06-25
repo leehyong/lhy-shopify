@@ -19,17 +19,9 @@ describe("product", function () {
                 69.99,
                 55
             ],
-            "option_names": [
-                "Color"
-            ],
-            "option_values": [
-                "Gold",
-                "Silver"
-            ],
-            "option_cnt": [
-                1,
-                1
-            ]
+            option1: { name: 'Colour', values: ["black", "red"] },
+            option2: { name: "Size", values: ["22", "33"] },
+            option3: { name: "Material", values: ["ffa", "fasd"] },
         };
         const ret = generateOptionsFromProductInfo(product);
         console.log(ret)

@@ -35,7 +35,11 @@ export class OpImportProduct {
         shopifyProduct.title = prodInfo.title;
         shopifyProduct.body_html = prodInfo.body_html;
         shopifyProduct.vendor = OpImportProduct.VENDOR;
-        shopifyProduct.images = prodInfo.images || [];
+        const images = [];
+        for (let img of prodInfo.images || []){
+            images.push({src:img})
+        }
+        shopifyProduct.images = images;
         const opVar = generateOptionsFromProductInfo(prodInfo);
         console.log(opVar)
         shopifyProduct.options = opVar.options;

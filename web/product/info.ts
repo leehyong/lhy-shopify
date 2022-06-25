@@ -1,19 +1,28 @@
 export type Products = { [key: string]: ProductInfo }
 
 export interface ProductInfoOption {
-    option_names: string[] | null;
-    option_values: string[] | null;
-    // 每行商品的有多少个option， 这样便于区分option_names，option_values 在每行有多少个， 从而避免解析错误
-    option_cnt: number[];
+    option1: Option;
+    option2: Option;
+    option3: Option;
     prices: number[] | null;
 }
 
-export interface ProductInfo extends ProductInfoOption {
+export interface Option {
+    name: string,
+    values: string[]|null
+}
+
+export interface ProductInfo {
     handle: string;
     title: string;
     body_html: string;
     images: string[] | null;
+    prices: number[] | null;
+    option1: Option;
+    option2: Option;
+    option3: Option;
 }
+
 
 interface Variant {
     option1: string | null,
@@ -30,59 +39,41 @@ export function initProductInfo(): ProductInfo {
         body_html: "",
         images: null,
         prices: null,
-        option_names: null,
-        option_values: null,
-        option_cnt: [],
+        option1: {name: null, values: []},
+        option2: {name: null, values: []},
+        option3: {name: null, values: []},
     };
 }
 
 
-export function generateOptionsFromProductInfo(infoOption: ProductInfoOption): {options:any[],variants:any[] } {
+export function generateOptionsFromProductInfo(infoOption: ProductInfoOption): { options: any[], variants: any[] } {
     const options: any[] = [];
     const variants: any[] = [];
-    let valueIndex: number = 0;
-    if (infoOption.option_names) {
-        for (let i = 0; i < infoOption.option_names.length; ++i) {
-            // 构造 options 的格式
-            /*
-            // 类似[
-            //   {
-            //     "name": "Color",
-            //     "values": [
-            //       "Blue",
-            //       "Black"
-            //     ]
-            //   },
-            //   {
-            //     "name": "Size",
-            //     "values": [
-            //       "155",
-            //       "159"
-            //     ]
-            //   }
-            // ];
-            */
-            const name: string = infoOption.option_names[i];
-            const cnt = infoOption.option_cnt[i];
-            const endValueIndex = cnt + valueIndex;
-            const values: string[] = [];
-            let variant:Variant = null;
-            if (i == 0) {
-                variant = {"price": infoOption.prices[i], option1:null, option2:null, option3:null};
-                variants.push(variant);
-            } else {
-                variant = variants[i];
-            }
-            while (valueIndex < endValueIndex) {
-                const val: string = infoOption.option_values[valueIndex];
-                // @ts-ignore
-                variant[`option${i + 1}`] = val;
-                values.push(val);
-                ++valueIndex;
-            }
-
-            options.push({name, values})
+    if (infoOption.option1.name) {
+        options.push(infoOption.option1)
+    }
+    if (infoOption.option2.name) {
+        options.push(infoOption.option2)
+    }
+    if (infoOption.option3.name) {
+        options.push(infoOption.option3)
+    }
+    for (let i = 0; i < infoOption.prices.length; ++i) {
+        const variant: any = {};
+        const values1: string = infoOption.option1.values[i];
+        const values2: string = infoOption.option2.values[i];
+        const values3: string = infoOption.option3.values[i];
+        variant["price"] = infoOption.prices[i];
+        if (values1) {
+            variant['option1'] = values1;
         }
+        if (values2) {
+            variant['option2'] = values2;
+        }
+        if (values3) {
+            variant['option3'] = values3;
+        }
+        variants.push(variant);
     }
     return {options, variants};
 }

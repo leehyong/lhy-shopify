@@ -107,8 +107,8 @@ export async function createServer(
             billing: billingSettings,
         })
     );
-    // https://e475-111-121-95-4.jp.ngrok.io/api/products-count?shop=lee666tech2.myshopify.com
-    // https://e475-111-121-95-4.jp.ngrok.io/api/import/product?shop=lee666tech2.myshopify.com
+    // https://b11a-111-121-95-4.ap.ngrok.io/api/products-count?shop=lee666tech2.myshopify.com
+    // https://b11a-111-121-95-4.ap.ngrok.io/api/import/product?shop=lee666tech2.myshopify.com
     app.get("/api/products-count", async (req, res) => {
         const session = await Shopify.Utils.loadCurrentSession(req, res, true);
         const {Product} = await import(

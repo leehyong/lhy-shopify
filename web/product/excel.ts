@@ -130,12 +130,10 @@ export class ParseProductInfo {
                 prod.handle = uniqueHandleTxt;
                 this.products[uniqueHandleTxt] = prod;
             }
-            const preOptionCnt = prod.option_values?.length || 0
             // 处理其他的商品属性
             row.eachCell({includeEmpty: false}, (cell: Cell, colNumber: number) => {
                     const headerName = this.headerCols[cell.col]
                     const txt = cell.text?.trim();
-                    if (txt) {
                         switch (headerName) {
                             case ParseProductInfo.TITLE:
                                 prod.title = txt;
@@ -150,26 +148,40 @@ export class ParseProductInfo {
                                 handleProductCell(prod, "prices", parseFloat(txt));
                                 break;
                             case ParseProductInfo.OPTION1_NAME:
+                                if (txt) {
+                                    prod.option1.name = txt
+                                }
+                                break;
                             case ParseProductInfo.OPTION2_NAME:
+                                if (txt) {
+                                    prod.option2.name = txt
+                                }
+                                break;
                             case ParseProductInfo.OPTION3_NAME:
-                                handleProductCell(prod, "option_names", txt);
+                                if (txt) {
+                                    prod.option3.name = txt
+                                }
                                 break;
                             case ParseProductInfo.OPTION1_VALUE:
+                                if (txt) {
+                                    prod.option1.values.push(txt)
+                                }
+                                break;
                             case ParseProductInfo.OPTION2_VALUE:
+                                if (txt) {
+                                    prod.option2.values.push(txt)
+                                }
+                                break;
                             case ParseProductInfo.OPTION3_VALUE:
-                                handleProductCell(prod, "option_values", txt);
+                                if (txt) {
+                                    prod.option3.values.push(txt)
+                                }
                                 break;
                             default:
                                 break
                         }
-                    }
                 }
             );
-            const curOpntionCnt = prod.option_values?.length || 0;
-            // 只能取 option_values ， 因为 name 可能为空， name为空时， 取上一个
-            const diff = curOpntionCnt - preOptionCnt;
-            if (diff > 0)
-                prod.option_cnt.push(diff)
         }
 
     }
