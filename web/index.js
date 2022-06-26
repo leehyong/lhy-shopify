@@ -127,14 +127,17 @@ export async function createServer(
             res.status(500).send(error.message);
         }
     });
-    const filePath = "asserts/jewelery.xlsx";
+    // 由于没有编写web界面，这里使用 get请求去创建商品信息。本来应该使用POST请求
     app.get("/api/import/product", async (req, res) => {
         try {
-            console.log("ParseProductInfo1")
+            // Excel文件的默认路径
+            const filePath = "asserts/jewelery.xlsx";
             const pi = new ParseProductInfo(filePath)
             const session = await Shopify.Utils.loadCurrentSession(req, res, true);
+            // 解析Excel
             pi.parse().then(async (allProducts) => {
                 const op = new OpImportProduct(session, allProducts);
+                // 将解析的excel 存入shopify的店铺里面
                 const cnt = await op.saveProducts();
                 console.log(cnt);
                 const msg = `保存的商品个数${cnt}`;

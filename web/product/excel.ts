@@ -49,7 +49,7 @@ export class ParseProductInfo {
         ParseProductInfo.OPTION3_VALUE,
 
     ];
-    private fileName: string;
+    private readonly fileName: string;
     // 存储解析的结果
     private products: Products;
     // 待解析商品表单的表头行所在索引， 可以避免前面几行不是表头行的情况
@@ -75,8 +75,8 @@ export class ParseProductInfo {
             const worksheets = await workbook.xlsx.readFile(p);
             if (worksheets.worksheets.length > 0) {
                 const worksheet = worksheets.worksheets[ParseProductInfo.PRODUCT_SHEET_INDEX];
-                // {includeEmpty: false} 不处理空行
                 // 解析单独的商品信息
+                // {includeEmpty: false} 不处理空行
                 worksheet.eachRow({includeEmpty: false}, ((row, rowNumber) => {
                     // 首先解析表头行
                     if (this.headerRowIndex == -1) {
@@ -126,6 +126,7 @@ export class ParseProductInfo {
             if (!uniqueHandleTxt) return;
             let prod: ProductInfo = this.products[uniqueHandleTxt];
             if (!prod) {
+                // 商品没有出现过，则需要新增商品
                 prod = initProductInfo();
                 prod.handle = uniqueHandleTxt;
                 this.products[uniqueHandleTxt] = prod;

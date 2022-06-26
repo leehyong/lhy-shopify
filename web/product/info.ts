@@ -1,17 +1,22 @@
 export type Products = { [key: string]: ProductInfo }
 
+// 单个商品的 Option
+export interface Option {
+    // 名字， 名字只有一个
+    name: string,
+    // 同一个名字对应的 value有多个， 如color: reb,black,blue
+    values: string[]|null
+}
+
+// 商品的Option及价格信息
 export interface ProductInfoOption {
     option1: Option;
     option2: Option;
     option3: Option;
+    // 价格，可以有许多个，与最大的Option的属性values的长度等长
     prices: number[] | null;
 }
-
-export interface Option {
-    name: string,
-    values: string[]|null
-}
-
+// 商品信息
 export interface ProductInfo {
     handle: string;
     title: string;
@@ -23,16 +28,8 @@ export interface ProductInfo {
     option3: Option;
 }
 
-
-interface Variant {
-    option1: string | null,
-    option2: string | null,
-    option3: string | null,
-    price: number,
-
-}
-
 export function initProductInfo(): ProductInfo {
+    // 初始化产品的默认信息
     return {
         title: "",
         handle: "",
@@ -47,6 +44,7 @@ export function initProductInfo(): ProductInfo {
 
 
 export function generateOptionsFromProductInfo(infoOption: ProductInfoOption): { options: any[], variants: any[] } {
+    //把excel解析的数据，转换为shopify里的option和variants
     const options: any[] = [];
     const variants: any[] = [];
     if (infoOption.option1.name) {

@@ -21,6 +21,7 @@ export class OpImportProduct {
             if (this.products.hasOwnProperty(k)) {
                 _productInfo = this.products[k];
                 try {
+                    // 新增并把商品存到shopify的店铺里
                     cnt += await this.newProductAndSave(_productInfo);
                 } catch (e) {
                     console.error(e)
@@ -31,6 +32,7 @@ export class OpImportProduct {
     }
 
     private async newProductAndSave(prodInfo: ProductInfo): Promise<number> {
+        // 组装商品信息
         const shopifyProduct = new Product({session: this.session});
         shopifyProduct.title = prodInfo.title;
         shopifyProduct.body_html = prodInfo.body_html;
